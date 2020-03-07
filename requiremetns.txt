@@ -1,0 +1,7 @@
+motor
+aiohttp
+PyJWT
+dnspython
+pytest
+pytest-aiohttp
+
