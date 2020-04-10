@@ -4,4 +4,4 @@ PyJWT
 dnspython
 pytest
 pytest-aiohttp
-
+aiohttp-cors
