@@ -1,14 +1,12 @@
 from motor.motor_asyncio import AsyncIOMotorClient
-import os
+from bson import ObjectId
+from pymongo.results import UpdateResult, InsertOneResult, DeleteResult
 
-password = os.environ["PASS"]
-MONGODB_URI = f'mongodb+srv://notes:{password}@notes_db/'
+MONGODB_URI = f'mongodb://root:toor@notes_db/'
 
 DB = None
 COLLECTION = None
 CLIENT = None
-ALGORITHM = environ['ALGORITHM']
-SECRET = environ['SECRET']
 
 
 def client():
@@ -25,48 +23,43 @@ def db():
     return DB
 
 
-def collection():
-    global COLLECTION
-    if COLLECTION is None:
-        COLLECTION = db()["notes"]
-    return COLLECTION
+async def find_user(username):
+    return await db().users.find_one({"username": username.lower()})
 
 
-async def get_user_notes(username: str) -> list:
+async def create_user(user_data):
+    await db().users.insert_one({
+        'username': user_data['username'].lower(),
+        'password': await user_data['password'],
+        'friends': []
+    })
+
+
+async def insert_note(owner_id: str, note: str) -> InsertOneResult:
     """
-    Function for getting user data(
-    returns list of dicts that contains notes (
-    id of single note, text of single note, and state of single note (is done or not)
-        )
-    )
+    State % 2 === 0 - don't done
+    State % 2 !== 0 - done
     """
-    user_data = await collection().find_one({"username": username})
-    return user_data.get("notes")
+    res = await db().notes.insert_one({
+        'owner': owner_id,
+        'note': note,
+        'state': 0
+    })
+    return res
 
 
-async def generate_note_id(username: str) -> int:
-    obj = await collection().find_one({"username": username})
-    return len(obj["notes"]) + 1
+async def update_note_state(_id: str, owner_id: str) -> UpdateResult:
+    return await db().notes.update_one({'owner': owner_id, '_id': ObjectId(_id)}, {'$inc': {
+        'state': 1
+    }})
 
 
-async def insert_note(text: str, username: str) -> None:
-    """Functions that insert text to the user notes
-    with default is_done state: False.
-    """
-    _id = await generate_note_id(username)
-    collection().update_one({"username": username},
-                            {"$push": {"notes": {"_id": _id,
-                                                 "text": text, "is_done": 1}}})
+async def get_user_notes(_id: str) -> list:
+    notes = []
+    async for note in db().notes.find({'owner': _id}):
+        notes.append(note)
+    return notes
 
 
-async def update_note_state(_id: int, username: str) -> None:
-    """Function change state of note for specify user"""
-    collection().update_one({"username": username,
-                             "notes._id": _id
-                             }, {"$inc": {"notes.$.is_done": 1}})
-
-
-async def delete_note(_id: int, username: str) -> None:
-    """Function delete specify note of specify user"""
-    collection().update_one({"username": username},
-                            {"$pull": {"notes": {"_id": _id}}})
+async def delete_note(_id: str, owner_id: str) -> DeleteResult:
+    return await db().notes.delete_one({'owner': owner_id, "_id": ObjectId(_id)})

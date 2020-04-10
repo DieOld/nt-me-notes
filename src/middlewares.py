@@ -1,24 +1,22 @@
-from db import SECRET, ALGORITHM
+from utils import SECRET, ALGORITHM
 import jwt
-from aiohttp.web import Response
+from aiohttp.web import json_response
 
 
-async def login_required(app, handler):
+async def auth_middleware(app, handler):
     async def middleware(request):
         request.user = None
-        _token = request.headers.get('Authorization')
-        if _token:
+        jwt_token = request.headers.get('Authorization', None)
+        if jwt_token:
             try:
-                payload = jwt.decode(_token, SECRET, ALGORITHM)
+                payload = jwt.decode(jwt_token, SECRET, ALGORITHM)
             except (jwt.DecodeError, jwt.ExpiredSignatureError):
-                return Response(text='{"message": "Token is invalid"}', status=400)
+                return json_response({'message': 'Token is invalid'}, status=400)
             request.user = payload
-        else:
-            return Response(text='{"message": "Login required"}', status=401)
         return await handler(request)
     return middleware
 
 
 middleware_list = [
-    login_required
+    auth_middleware
 ]

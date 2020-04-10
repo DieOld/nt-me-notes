@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  web:
+    container_name: notes_web
+    build: .
+    command: "python3 main.py"
+    ports:
+      - 8080:8080
+    volumes:
+      - ./src/:/chat/
+  db:
+    container_name: notes_db
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: toor
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/data/db
+  redis:
+      image: redis:latest
+      ports:
+          - 6379:6379
+
+volumes:
+  mongo:

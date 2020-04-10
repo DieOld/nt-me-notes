@@ -1,10 +1,12 @@
-from aiohttp.web import get, put, patch, delete
-import view
+from aiohttp import web
+import api
 
 routes = [
-    get("/ping", view.ping),
-    put("/insert-note", view.insert_note),
-    patch("/update-note-state", view.update_note_state),
-    delete("/delete-note", view.delete_note),
-    get("/get-user-notes", view.get_user_notes)
+    web.get("/ping", api.ping),
+    web.post('/register', api.register),
+    web.post('/login', api.login),
+    web.post("/insert-note", api.insert_note),
+    web.patch("/update-note-state", api.update_note_state),
+    web.delete("/delete-note", api.delete_note),
+    web.get("/get-user-notes", api.get_user_notes)
 ]
