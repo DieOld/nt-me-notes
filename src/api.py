@@ -11,7 +11,7 @@ async def ping(request):
 
 async def login(request):
     msg, status = await utils.verify_user(await request.json())
-    return json_response(msg, status=200)
+    return json_response(msg, status=status)
 
 
 async def register(request):
@@ -28,8 +28,11 @@ async def insert_note(request):
     data = await request.json()
     note = data.get("text")
     if note:
-        if await db.insert_note(request.user['_id'], note):
-            return json_response({"message": "OK"}, status=200)
+        insert_result = await db.insert_note(request.user['_id'], note)
+        if insert_result:
+            note = await db.db().notes.find_one({'_id': insert_result.inserted_id})
+            note['_id'] = str(note['_id'])
+            return json_response({"message": note}, status=200)
         return json_response({"message": "Something went wrong"}, status=501)
     return json_response({"message": "You can't create empty note"}, status=403)
 
