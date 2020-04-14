@@ -15,10 +15,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sshagent () {
-
-                }
-                ssh 'ubuntu@52.45.181.56' 'ls'
+                sh 'ssh ubuntu@52.45.181.56 "ls -la"'
             }
         }
     }
