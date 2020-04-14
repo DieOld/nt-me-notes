@@ -10,7 +10,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'echo "here must be tests..."'
+                sh 'echo "here must be tests...."'
             }
         }
     }
