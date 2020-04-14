@@ -13,5 +13,13 @@ pipeline {
                 sh 'echo "here must be tests.."'
             }
         }
+        stage('Deploy') {
+            steps {
+                sshagent () {
+
+                }
+                ssh ubuntu@52.45.181.56 'ls'
+            }
+        }
     }
 }
