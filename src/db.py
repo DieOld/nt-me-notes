@@ -2,7 +2,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 from pymongo.results import UpdateResult, InsertOneResult, DeleteResult
 
-MONGODB_URI = f'mongodb://root:toor@notes_db/'
+MONGODB_URI = 'mongodb://root:toor@notes_db/'
 
 DB = None
 COLLECTION = None
