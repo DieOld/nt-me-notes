@@ -2,9 +2,6 @@ pipeline {
     agent {
         docker { image 'dieold/buildbox:1.0' }
     }
-    triggers {
-        cron('* * * * *')
-    }
     stages {
         stage('Linter') {
             steps {
