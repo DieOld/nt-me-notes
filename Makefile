@@ -11,3 +11,6 @@ rm:
 
 build:
 	$(COMPOSE) build
+
+test-integration:
+	pytest -v -q

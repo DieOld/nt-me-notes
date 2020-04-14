@@ -8,5 +8,10 @@ pipeline {
                 sh 'flake8'
             }
         }
+        stage('Test') {
+            steps {
+                sh 'make test-integration'
+            }
+        }
     }
 }
