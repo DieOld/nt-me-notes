@@ -18,7 +18,7 @@ pipeline {
                 sshagent () {
 
                 }
-                ssh ubuntu@52.45.181.56 'ls'
+                ssh 'ubuntu@52.45.181.56' 'ls'
             }
         }
     }
