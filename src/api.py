@@ -42,7 +42,7 @@ async def update_note_state(request):
     data = await request.json()
     if await db.update_note_state(_id=data['_id'], owner_id=request.user['_id']):
         return json_response({"message": "OK"}, status=200)
-    return json_response({"message": "Something went wrong"}, status=501)
+    return json_response({"message": "Something went wrong."}, status=501)
 
 
 @login_required
