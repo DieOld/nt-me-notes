@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                ssh ubuntu@52.45.181.56 "ls -la"
+                sh 'ssh -tf ubuntu@52.45.181.56 "ls -la"'
             }
         }
     }
