@@ -16,7 +16,9 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    ssh -o StrictHostKeyChecking=no ubuntu@52.45.181.56 id
+                    ssh -o StrictHostKeyChecking=no ubuntu@52.45.181.56 bash -c "
+                    ls -la;
+                    "
                 '''
             }
         }
