@@ -1,0 +1,14 @@
+description: Endpoint for service is up testing
+tags:
+  - Health check
+operationId: ping
+responses:
+  "200":
+    description: Successfull operation. Returns pong json
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            text:
+              type: string

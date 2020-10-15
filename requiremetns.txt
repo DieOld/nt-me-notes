@@ -5,3 +5,4 @@ dnspython
 pytest
 pytest-aiohttp
 aiohttp-cors
+aiohttp-swagger==1.0.15
